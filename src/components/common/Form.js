@@ -6,7 +6,6 @@ const Form = ({columns, initialData, onAddData}) => {
     const [personData, setPersonData] = useState(initialData);
 
     const handleClick = (event) => {
-        console.log(event)
         event.preventDefault();
         onAddData(personData);
     }
@@ -17,7 +16,6 @@ const Form = ({columns, initialData, onAddData}) => {
         data[input.name] = input.value;
         setPersonData(data)
     }
-
 
     return (
         <form>
