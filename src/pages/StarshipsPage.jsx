@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Table from '../components/common/Table';
 import Form from '../components/common/Form';
+import Heading from '../components/common/Heading';
 
 const data = [
   { name: 'CR90 corvette', crew: '30-165', passengers: '600', id: '1' },
@@ -32,6 +33,8 @@ export const StarshipsPage = () => {
   }
 
   return (<>
+    <Heading text="Starships" />
+
     <Table
       data={ships}
       columns={columns}

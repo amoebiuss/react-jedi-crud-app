@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Table from '../components/common/Table';
 import Form from '../components/common/Form';
+import Heading from '../components/common/Heading';
 
 const data = [
   { name: 'Tatooine', diameter: '10465', terrain: 'desert', id: '1' },
@@ -32,6 +33,8 @@ export const PlanetsPage = () => {
   }
 
   return (<>
+    <Heading text="Planets" />
+
     <Table
       data={planets}
       columns={columns}

@@ -17,7 +17,6 @@ function Table({ columns, data, tableDescriptor, onRowDelete }) {
                 {data.map((item, index) => (
                     <tr key={item.id}>
                         <th scope="row">
-                            <Button onClick={() => onRowDelete(item.id)} label="Delete" classes='btn-danger'></Button>
                             {++index}
                         </th>
                         {columns.map(columnTitle => (
@@ -25,6 +24,9 @@ function Table({ columns, data, tableDescriptor, onRowDelete }) {
                                 {item[columnTitle]}
                             </td>
                         ))}
+                        <td>
+                            <Button onClick={() => onRowDelete(item.id)} label="Delete" classes='btn-danger'></Button>
+                        </td>
                     </tr>
                 ))}
             </tbody>
