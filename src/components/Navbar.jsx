@@ -7,7 +7,7 @@ export default ({ routes }) => (
     <Navbar.Collapse>
       <Nav>
         {routes.map((route, id) => (
-          <NavItem eventkey={id} href={route.path}>
+          <NavItem eventkey={id} key={route.id} href={route.path}>
             <Nav.Link as={Link} to={route.path}>{route.title}</Nav.Link>
           </NavItem>
         ))}

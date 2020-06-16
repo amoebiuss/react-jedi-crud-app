@@ -12,15 +12,18 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const routes = [
-    {
+    {   
+        id: 0,
         path: '/people',
         title: 'People',
     },
     {
+        id: 1,
         path: '/planets',
         title: 'Planets',
     },
     {
+        id: 2,
         path: '/starships',
         title: 'Starships',
     },
