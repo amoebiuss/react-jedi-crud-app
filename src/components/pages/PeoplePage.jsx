@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
-import Table from '../components/common/Table';
-import Form from '../components/common/Form';
-import Heading from '../components/common/Heading';
+import React, { useState, useEffect } from 'react';
+import Table from '../common/Table';
+import Form from '../common/Form';
+import Heading from '../common/Heading';
+import * as dataService from '../../services/dataService';
 
-const data = [
-  { first: 'Mark', last: 'Otto', handle: '@motto', id: '1' },
-  { first: 'Carl', last: 'Reno', handle: '@ceno', id: '2' },
-  { first: 'Steve', last: 'Smith', handle: '@ssteve', id: '3' }
-]
-
-const columns = Object.keys(data[0]);
+let columns = [];
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState(data);
+  const [people, setPeople] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await dataService.getPeople();
+      columns = Object.keys(data[0]);
+      setPeople(data);
+    };
+
+    getData();
+  }, [])
 
   const handleAppPerson = (personData) => {
     const data = [...people, personData];
@@ -33,7 +38,7 @@ export const PeoplePage = () => {
   }
 
   return (<>
-    <Heading text="People"/>
+    <Heading text="People" />
 
     <Table
       data={people}

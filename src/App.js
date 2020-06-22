@@ -5,10 +5,7 @@ import {
     Route
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import { PeoplePage } from './pages/PeoplePage';
-import { PlanetsPage } from './pages/PlanetsPage';
-import { StarshipsPage } from './pages/StarshipsPage';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { PeoplePage, PlanetsPage, StarshipsPage, NotFoundPage } from './components/pages';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const routes = [

@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
-import Table from '../components/common/Table';
-import Form from '../components/common/Form';
-import Heading from '../components/common/Heading';
+import React, { useState, useEffect } from 'react';
+import Table from '../common/Table';
+import Form from '../common/Form';
+import Heading from '../common/Heading';
+import * as dataService from '../../services/dataService';
 
-const data = [
-  { name: 'Tatooine', diameter: '10465', terrain: 'desert', id: '1' },
-  { name: 'Alderaan', diameter: '12500', terrain: 'grasslands, mountains', id: '2' },
-  { name: 'Dagobah', diameter: '8900', terrain: 'swamp, jungles', id: '3' },
-]
-
-const columns = Object.keys(data[0]);
+let columns = [];
 
 export const PlanetsPage = () => {
-  const [planets, setPlanets] = useState(data);
+  const [planets, setPlanets] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await dataService.getPlanets();
+      columns = Object.keys(data[0]);
+      setPlanets(data);
+    };
+
+    getData();
+  }, [])
 
   const handleAppPlanet = (planetData) => {
     const data = [...planets, planetData];

@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
-import Table from '../components/common/Table';
-import Form from '../components/common/Form';
-import Heading from '../components/common/Heading';
+import React, { useState, useEffect } from 'react';
+import Table from '../common/Table';
+import Form from '../common/Form';
+import Heading from '../common/Heading';
+import * as dataService from '../../services/dataService';
 
-const data = [
-  { name: 'CR90 corvette', crew: '30-165', passengers: '600', id: '1' },
-  { name: 'Sentinel-class landing craft', crew: '5', passengers: '75', id: '2' },
-  { name: 'Death Star', crew: '342,953', passengers: '843,342', id: '3' },
-]
-
-const columns = Object.keys(data[0]);
+let columns = [];
 
 export const StarshipsPage = () => {
-  const [ships, setShips] = useState(data);
+  const [ships, setShips] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await dataService.getShips();
+      columns = Object.keys(data[0]);
+      setShips(data);
+    };
+
+    getData();
+  }, [])
 
   const handleAppShip = (shipData) => {
     const data = [...ships, shipData];

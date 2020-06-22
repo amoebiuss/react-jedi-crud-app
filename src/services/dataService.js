@@ -1,20 +1,25 @@
-import axios from 'axios';
-
 const BASE_URL = 'https://swapi.dev/api';
 
-async function get(path) {
-  const response = await axios(
-    `${BASE_URL}/${path}`,
-  );
+export const getPeople = async () => {
+  const peopleRes = await (await fetch(`${BASE_URL}/people`)).json();
 
-  const data = response.data.results.map((item, index) => {
-    return { ...item, id: index }
-  });
-
-  return {
-    data: data,
-    columns: Object.keys(data[0]),
-  };
+  return peopleRes.results.map(({ name, height, mass, gender, birth_year }) => ({
+    name, height, mass, gender, birth_year
+  }));
 }
 
-export { get };
+export const getPlanets = async () => {
+  const planetsRes = await (await fetch(`${BASE_URL}/planets`)).json();
+
+  return planetsRes.results.map(({ name, diameter, climate, terrain, population }) => ({
+    name, diameter, climate, terrain, population
+  }));
+};
+
+export const getShips = async () => {
+  const shipsRes = await (await fetch(`${BASE_URL}/starships`)).json();
+
+  return shipsRes.results.map(({ name, model, manufacturer, crew, passengers }) => ({
+    name, model, manufacturer, crew, passengers
+  }));
+};
