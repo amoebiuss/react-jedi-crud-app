@@ -11,11 +11,17 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await dataService.getPeople();
+      const isStorageEmpty = !localStorage.getItem('people');
+      const data = isStorageEmpty
+        ? await dataService.getPeople()
+        : JSON.parse(localStorage.getItem('people'));
+      
       columns = Object.keys(data[0]);
       setPeople(data);
-    };
 
+      isStorageEmpty && localStorage.setItem('people', JSON.stringify(data));
+    };
+    
     getData();
   }, [])
 
@@ -31,10 +37,11 @@ export const PeoplePage = () => {
     }, {})
   }
 
-  const handleRowDelete = (id) => {
+  const handleRowDelete = (name) => {
     const data = [...people];
-    const filteredData = data.filter(item => item.id !== id);
+    const filteredData = data.filter(item => item.name !== name);
     setPeople(filteredData);
+    localStorage.setItem('people', JSON.stringify(filteredData));
   }
 
   return (<>

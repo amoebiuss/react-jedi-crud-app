@@ -11,9 +11,15 @@ export const PlanetsPage = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await dataService.getPlanets();
+      const isStorageEmpty = !localStorage.getItem('planets');
+      const data = isStorageEmpty
+        ? await dataService.getPlanets()
+        : JSON.parse(localStorage.getItem('planets'));
+
       columns = Object.keys(data[0]);
       setPlanets(data);
+
+      isStorageEmpty && localStorage.setItem('planets', JSON.stringify(data));
     };
 
     getData();
@@ -31,10 +37,11 @@ export const PlanetsPage = () => {
     }, {})
   }
 
-  const handleRowDelete = (id) => {
+  const handleRowDelete = (name) => {
     const data = [...planets];
-    const filteredData = data.filter(item => item.id !== id);
+    const filteredData = data.filter(item => item.name !== name);
     setPlanets(filteredData);
+    localStorage.setItem('planets', JSON.stringify(filteredData));
   }
 
   return (<>

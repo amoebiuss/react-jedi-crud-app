@@ -25,7 +25,7 @@ function Table({ columns, data, tableDescriptor, onRowDelete }) {
                             </td>
                         ))}
                         <td>
-                            <Button onClick={() => onRowDelete(item.id)} label="Delete" classes='btn-danger'></Button>
+                            <Button onClick={() => onRowDelete(item.name)} label="Delete" classes='btn-danger'></Button>
                         </td>
                     </tr>
                 ))}

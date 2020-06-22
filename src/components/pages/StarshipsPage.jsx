@@ -11,9 +11,15 @@ export const StarshipsPage = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await dataService.getShips();
+      const isStorageEmpty = !localStorage.getItem('starships');
+      const data = isStorageEmpty
+        ? await dataService.getShips()
+        : JSON.parse(localStorage.getItem('starships'));
+
       columns = Object.keys(data[0]);
       setShips(data);
+
+      isStorageEmpty && localStorage.setItem('starships', JSON.stringify(data));
     };
 
     getData();
@@ -31,10 +37,11 @@ export const StarshipsPage = () => {
     }, {})
   }
   
-  const handleRowDelete = (id) => {
+  const handleRowDelete = (name) => {
     const data = [...ships];
-    const filteredData = data.filter(item => item.id !== id);
+    const filteredData = data.filter(item => item.name !== name);
     setShips(filteredData);
+    localStorage.setItem('starships', JSON.stringify(filteredData));
   }
 
   return (<>
