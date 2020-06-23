@@ -1,0 +1,11 @@
+.table-row:hover, .table-row:active {
+  background: #3e4247;
+}
+
+.btn-container {
+  text-align: right;
+}
+
+td {
+  max-width: 180px;
+}
