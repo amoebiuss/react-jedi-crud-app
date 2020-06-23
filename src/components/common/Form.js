@@ -34,7 +34,7 @@ const Form = ({ columns, initialData, onFormSubmit }) => {
     const validate = (data) => {
         let errors = {};
 
-        columns.map((key) => {
+        columns.forEach((key) => {
             if (!data[key]) {
                 errors = { ...errors, [key]: 'Field is required' };
             }
