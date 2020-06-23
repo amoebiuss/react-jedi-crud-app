@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import Button from './Button';
 import { Alert } from 'react-bootstrap';
 import './Table.css';
 
 function Table({ columns, data, tableDescriptor, onItemDelete }) {
+    let { url } = useRouteMatch();
+
     return (<>
         <table className="table table-dark">
             <thead>
@@ -30,7 +32,7 @@ function Table({ columns, data, tableDescriptor, onItemDelete }) {
                             <Button onClick={() => onItemDelete(item.id)} label="Delete" classes='btn-danger'></Button>
 
                             <Link to={{
-                                pathname: `/people/${item.id}`,
+                                pathname: `${url}/${item.id}`,
                                 state: { ...item }
                             }} style={{ margin: '0 10px' }}>
                                 Edit
