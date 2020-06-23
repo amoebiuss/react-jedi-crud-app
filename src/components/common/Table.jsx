@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Button from './Button';
 import { Alert } from 'react-bootstrap';
+import './Table.css';
 
-function Table({ columns, data, tableDescriptor, onRowDelete }) {
+function Table({ columns, data, tableDescriptor, onItemDelete }) {
     return (<>
         <table className="table table-dark">
             <thead>
@@ -15,7 +17,7 @@ function Table({ columns, data, tableDescriptor, onRowDelete }) {
             </thead>
             <tbody>
                 {data.map((item, index) => (
-                    <tr key={item.name}>
+                    <tr key={item.id} className="table-row">
                         <th scope="row">
                             {++index}
                         </th>
@@ -24,8 +26,15 @@ function Table({ columns, data, tableDescriptor, onRowDelete }) {
                                 {item[columnTitle]}
                             </td>
                         ))}
-                        <td>
-                            <Button onClick={() => onRowDelete(item.name)} label="Delete" classes='btn-danger'></Button>
+                        <td className="btn-container">
+                            <Button onClick={() => onItemDelete(item.id)} label="Delete" classes='btn-danger'></Button>
+
+                            <Link to={{
+                                pathname: `/people/${item.id}`,
+                                state: { ...item }
+                            }} style={{ margin: '0 10px' }}>
+                                Edit
+                            </Link>
                         </td>
                     </tr>
                 ))}

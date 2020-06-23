@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Table from '../common/Table';
-import Form from '../common/Form';
-import Heading from '../common/Heading';
+import { Table, Form, Heading } from '../common';
 import * as dataService from '../../services/dataService';
 
 let columns = [];
@@ -16,7 +14,7 @@ export const StarshipsPage = () => {
         ? await dataService.getShips()
         : JSON.parse(localStorage.getItem('starships'));
 
-      columns = Object.keys(data[0]);
+      columns = Object.keys(data[0]).filter(item => item !== 'id');
       setShips(data);
 
       isStorageEmpty && localStorage.setItem('starships', JSON.stringify(data));

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Table from '../common/Table';
-import Form from '../common/Form';
-import Heading from '../common/Heading';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { Table, Heading } from '../common';
 import * as dataService from '../../services/dataService';
 
 let columns = [];
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState([]);
+  let { url } = useRouteMatch();
 
   useEffect(() => {
     const getData = async () => {
@@ -15,31 +15,19 @@ export const PeoplePage = () => {
       const data = isStorageEmpty
         ? await dataService.getPeople()
         : JSON.parse(localStorage.getItem('people'));
-      
-      columns = Object.keys(data[0]);
+
+      columns = Object.keys(data[0]).filter(item => item !== 'id');
       setPeople(data);
 
       isStorageEmpty && localStorage.setItem('people', JSON.stringify(data));
     };
-    
+
     getData();
   }, [])
 
-  const handleAppPerson = (personData) => {
-    const data = [...people, personData];
-    setPeople(data)
-  }
-
-  const getInitialPeopleData = () => {
-    return columns.reduce((cols, columnName) => {
-      cols[columnName] = "";
-      return cols;
-    }, {})
-  }
-
-  const handleRowDelete = (name) => {
+  const handleItemDelete = (id) => {
     const data = [...people];
-    const filteredData = data.filter(item => item.name !== name);
+    const filteredData = data.filter(item => item.id !== id);
     setPeople(filteredData);
     localStorage.setItem('people', JSON.stringify(filteredData));
   }
@@ -47,17 +35,15 @@ export const PeoplePage = () => {
   return (<>
     <Heading text="People" />
 
+    <Link to={`${url}/new`} className="btn btn-info" style={{ margin: '15px 0' }}>
+      + Add person
+    </Link>
+
     <Table
       data={people}
       columns={columns}
       tableDescriptor="People"
-      onRowDelete={handleRowDelete}
-    />
-
-    <Form
-      initialData={getInitialPeopleData()}
-      columns={columns}
-      onAddData={handleAppPerson}
+      onItemDelete={handleItemDelete}
     />
   </>)
 }

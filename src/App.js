@@ -2,14 +2,15 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Switch,
-    Route
+    Route,
+    Redirect
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import { PeoplePage, PlanetsPage, StarshipsPage, NotFoundPage } from './components/pages';
+import { PeoplePage, PlanetsPage, StarshipsPage, NotFoundPage, FormPage } from './components/pages';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const routes = [
-    {   
+    {
         id: 0,
         path: '/people',
         title: 'People',
@@ -32,24 +33,15 @@ function App() {
             <Navbar routes={routes} />
             <div className="container">
                 <Switch>
-                    <Route exact path="/">
-                        <PeoplePage />
-                    </Route>
-                    <Route path="/people">
-                        <PeoplePage />
-                    </Route>
-                    <Route path="/planets">
-                        <PlanetsPage />
-                    </Route>
-                    <Route path="/starships">
-                        <StarshipsPage />
-                    </Route>
-                    <Route exact path='*'>
-                        <NotFoundPage />
-                    </Route>
+                    <Redirect exact from="/" to="/people"/>
+                    <Route path="/people/:id" component={FormPage}/>
+                    <Route path="/people" component={PeoplePage} />
+                    <Route path="/planets" component={PlanetsPage} />
+                    <Route path="/starships" component={StarshipsPage} />
+                    <Route exact path='*' component={NotFoundPage} />
                 </Switch>
             </div>
-    </Router>
+        </Router>
     )
 }
 
