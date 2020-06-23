@@ -1,6 +1,27 @@
 import { v4 as uuidv4 } from 'uuid';
 const BASE_URL = 'https://swapi.dev/api';
 
+export const routes = [
+  {
+    id: 0,
+    path: '/people',
+    title: 'People',
+    titleSlug: 'person',
+  },
+  {
+    id: 1,
+    path: '/planets',
+    title: 'Planets',
+    titleSlug: 'planet',
+  },
+  {
+    id: 2,
+    path: '/starships',
+    title: 'Starships',
+    titleSlug: 'starship',
+  },
+]
+
 export const getPeople = async () => {
   const peopleRes = await (await fetch(`${BASE_URL}/people`)).json();
 

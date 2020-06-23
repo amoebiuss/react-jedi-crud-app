@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Form, Heading, BackLink } from '../common';
-import { generateColumns, generateID } from '../../services/utils';
+import { generateColumns, generateID, generateHeading } from '../../services/utils';
 
 export const FormPage = ({ location }) => {
-  const [personList, setPersonList] = useState(JSON.parse(localStorage.getItem('people')));
+  const { url } = useRouteMatch();
+  const storagePath = url.slice(url.indexOf('/') + 1, url.lastIndexOf('/'));
+  const [personList, setPersonList] = useState(JSON.parse(localStorage.getItem(storagePath)));
   const [person, setPerson] = useState(location.state || {});
   const history = useHistory();
 
@@ -22,15 +24,15 @@ export const FormPage = ({ location }) => {
     setPerson(updatedPerson);
     setPersonList(newList);
 
-    localStorage.setItem('people', JSON.stringify(newList));
+    localStorage.setItem(storagePath, JSON.stringify(newList));
     history.goBack();
   }
 
   return (<>
     {
       Object.keys(person).length
-        ? <Heading text={`Edit person: ${person.name}`} />
-        : <Heading text="Add new person" />
+        ? <Heading text={`${generateHeading(url, true)}: ${person.name}`} />
+        : <Heading text={generateHeading(url, false)} />
     }
     <BackLink />
 

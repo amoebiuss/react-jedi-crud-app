@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Heading } from '../common';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { Table, Heading } from '../common';
 import * as dataService from '../../services/dataService';
 
 let columns = [];
 
 export const PlanetsPage = () => {
   const [planets, setPlanets] = useState([]);
+  let { url } = useRouteMatch();
 
   useEffect(() => {
     const getData = async () => {
@@ -23,21 +25,9 @@ export const PlanetsPage = () => {
     getData();
   }, [])
 
-  const handleAppPlanet = (planetData) => {
-    const data = [...planets, planetData];
-    setPlanets(data)
-  }
-
-  const getInitialPlanetData = () => {
-    return columns.reduce((cols, columnName) => {
-      cols[columnName] = "";
-      return cols;
-    }, {})
-  }
-
-  const handleRowDelete = (name) => {
+  const handleItemDelete = (id) => {
     const data = [...planets];
-    const filteredData = data.filter(item => item.name !== name);
+    const filteredData = data.filter(item => item.id !== id);
     setPlanets(filteredData);
     localStorage.setItem('planets', JSON.stringify(filteredData));
   }
@@ -45,17 +35,15 @@ export const PlanetsPage = () => {
   return (<>
     <Heading text="Planets" />
 
+    <Link to={`${url}/new`} className="btn btn-info" style={{ margin: '15px 0' }}>
+      + Add planet
+    </Link>
+
     <Table
       data={planets}
       columns={columns}
       tableDescriptor="Planets"
-      onRowDelete={handleRowDelete}
-    />
-
-    <Form
-      initialData={getInitialPlanetData()}
-      columns={columns}
-      onAddData={handleAppPlanet}
+      onItemDelete={handleItemDelete}
     />
   </>)
 };

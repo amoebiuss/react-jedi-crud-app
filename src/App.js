@@ -7,25 +7,8 @@ import {
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { PeoplePage, PlanetsPage, StarshipsPage, NotFoundPage, FormPage } from './components/pages';
+import { routes } from './services/dataService';
 import 'bootstrap/dist/css/bootstrap.css';
-
-const routes = [
-    {
-        id: 0,
-        path: '/people',
-        title: 'People',
-    },
-    {
-        id: 1,
-        path: '/planets',
-        title: 'Planets',
-    },
-    {
-        id: 2,
-        path: '/starships',
-        title: 'Starships',
-    },
-]
 
 function App() {
     return (
@@ -36,7 +19,9 @@ function App() {
                     <Redirect exact from="/" to="/people"/>
                     <Route path="/people/:id" component={FormPage}/>
                     <Route path="/people" component={PeoplePage} />
+                    <Route path="/planets/:id" component={FormPage} />
                     <Route path="/planets" component={PlanetsPage} />
+                    <Route path="/starships/:id" component={FormPage} />
                     <Route path="/starships" component={StarshipsPage} />
                     <Route exact path='*' component={NotFoundPage} />
                 </Switch>

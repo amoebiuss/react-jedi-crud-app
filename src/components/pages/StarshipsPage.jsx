@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Heading } from '../common';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { Table, Heading } from '../common';
 import * as dataService from '../../services/dataService';
 
 let columns = [];
 
 export const StarshipsPage = () => {
   const [ships, setShips] = useState([]);
+  let { url } = useRouteMatch();
 
   useEffect(() => {
     const getData = async () => {
@@ -23,39 +25,25 @@ export const StarshipsPage = () => {
     getData();
   }, [])
 
-  const handleAppShip = (shipData) => {
-    const data = [...ships, shipData];
-    setShips(data)
-  }
-
-  const getInitialShipData = () => {
-    return columns.reduce((cols, columnName) => {
-      cols[columnName] = "";
-      return cols;
-    }, {})
-  }
-  
-  const handleRowDelete = (name) => {
+  const handleItemDelete = (id) => {
     const data = [...ships];
-    const filteredData = data.filter(item => item.name !== name);
+    const filteredData = data.filter(item => item.id !== id);
     setShips(filteredData);
-    localStorage.setItem('starships', JSON.stringify(filteredData));
+    localStorage.setItem('ships', JSON.stringify(filteredData));
   }
 
   return (<>
     <Heading text="Starships" />
 
+    <Link to={`${url}/new`} className="btn btn-info" style={{ margin: '15px 0' }}>
+      + Add starship
+    </Link>
+
     <Table
       data={ships}
       columns={columns}
       tableDescriptor="Starships"
-      onRowDelete={handleRowDelete}
-    />
-
-    <Form
-      initialData={getInitialShipData()}
-      columns={columns}
-      onAddData={handleAppShip}
+      onItemDelete={handleItemDelete}
     />
   </>)
 };
