@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { Table, Heading } from '../common';
-import * as dataService from '../../services/dataService';
-
-let columns = [];
+import { getShips, columnsData } from '../../services/dataService';
 
 export const StarshipsPage = () => {
+  const [columns] = useState(columnsData.starships);
   const [ships, setShips] = useState([]);
   let { url } = useRouteMatch();
 
@@ -13,12 +12,10 @@ export const StarshipsPage = () => {
     const getData = async () => {
       const isStorageEmpty = !localStorage.getItem('starships');
       const data = isStorageEmpty
-        ? await dataService.getShips()
+        ? await getShips()
         : JSON.parse(localStorage.getItem('starships'));
-
-      columns = Object.keys(data[0]).filter(item => item !== 'id');
+      
       setShips(data);
-
       isStorageEmpty && localStorage.setItem('starships', JSON.stringify(data));
     };
 
@@ -29,7 +26,7 @@ export const StarshipsPage = () => {
     const data = [...ships];
     const filteredData = data.filter(item => item.id !== id);
     setShips(filteredData);
-    localStorage.setItem('ships', JSON.stringify(filteredData));
+    localStorage.setItem('starships', JSON.stringify(filteredData));
   }
 
   return (<>

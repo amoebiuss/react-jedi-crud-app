@@ -20,7 +20,13 @@ export const routes = [
     title: 'Starships',
     titleSlug: 'starship',
   },
-]
+];
+
+export const columnsData = {
+  people: ['name', 'height', 'mass', 'gender', 'birth_year'],
+  planets: ['name', 'diameter', 'climate', 'terrain', 'population'],
+  starships: ['name', 'model', 'manufacturer', 'crew', 'passengers'],
+};
 
 export const getPeople = async () => {
   const peopleRes = await (await fetch(`${BASE_URL}/people`)).json();

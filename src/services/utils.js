@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { routes } from './dataService';
+import { routes, columnsData } from './dataService';
 
-export const generateColumns = (obj) => {
-  return Object.keys(obj).filter(key => key !== 'id');
+export const generateColumns = (path) => {
+  return columnsData[path];
 }
 
 export const generateID = () => {

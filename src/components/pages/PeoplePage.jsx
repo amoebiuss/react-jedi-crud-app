@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { Table, Heading } from '../common';
-import * as dataService from '../../services/dataService';
-
-let columns = [];
+import { getPeople, columnsData } from '../../services/dataService';
 
 export const PeoplePage = () => {
+  const [columns] = useState(columnsData.people);
   const [people, setPeople] = useState([]);
   let { url } = useRouteMatch();
 
@@ -13,12 +12,10 @@ export const PeoplePage = () => {
     const getData = async () => {
       const isStorageEmpty = !localStorage.getItem('people');
       const data = isStorageEmpty
-        ? await dataService.getPeople()
+        ? await getPeople()
         : JSON.parse(localStorage.getItem('people'));
-
-      columns = Object.keys(data[0]).filter(item => item !== 'id');
+      
       setPeople(data);
-
       isStorageEmpty && localStorage.setItem('people', JSON.stringify(data));
     };
 

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { Table, Heading } from '../common';
-import * as dataService from '../../services/dataService';
-
-let columns = [];
+import { getPlanets, columnsData } from '../../services/dataService';
 
 export const PlanetsPage = () => {
+  const [columns] = useState(columnsData.planets);
   const [planets, setPlanets] = useState([]);
   let { url } = useRouteMatch();
 
@@ -13,12 +12,10 @@ export const PlanetsPage = () => {
     const getData = async () => {
       const isStorageEmpty = !localStorage.getItem('planets');
       const data = isStorageEmpty
-        ? await dataService.getPlanets()
+        ? await getPlanets()
         : JSON.parse(localStorage.getItem('planets'));
-
-      columns = Object.keys(data[0]).filter(item => item !== 'id');
+      
       setPlanets(data);
-
       isStorageEmpty && localStorage.setItem('planets', JSON.stringify(data));
     };
 

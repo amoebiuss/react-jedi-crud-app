@@ -6,7 +6,7 @@ import { generateColumns, generateID, generateHeading } from '../../services/uti
 export const FormPage = ({ location }) => {
   const { url } = useRouteMatch();
   const storagePath = url.slice(url.indexOf('/') + 1, url.lastIndexOf('/'));
-  const [personList, setPersonList] = useState(JSON.parse(localStorage.getItem(storagePath)));
+  const [personList, setPersonList] = useState(JSON.parse(localStorage.getItem(storagePath)) || []);
   const [person, setPerson] = useState(location.state || {});
   const history = useHistory();
 
@@ -38,7 +38,7 @@ export const FormPage = ({ location }) => {
 
     <Form
       initialData={person}
-      columns={generateColumns(personList[0])}
+      columns={generateColumns(storagePath)}
       onFormSubmit={handleFormSubmit}
     />
   </>);
