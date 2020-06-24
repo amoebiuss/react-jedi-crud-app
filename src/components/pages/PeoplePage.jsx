@@ -1,32 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { Table, Heading } from '../common';
-import { getPeople, columnsData } from '../../services/dataService';
+import { getPeopleList } from '../../store/selectors/people';
+import { deletePerson, changeBelovedStatus } from '../../store/actions/people';
+import { connect } from 'react-redux';
 
-export const PeoplePage = () => {
-  const [columns] = useState(columnsData.people);
-  const [people, setPeople] = useState([]);
+const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson, dispatchEditPerson }) => {
   let { url } = useRouteMatch();
 
-  useEffect(() => {
-    const getData = async () => {
-      const isStorageEmpty = !localStorage.getItem('people');
-      const data = isStorageEmpty
-        ? await getPeople()
-        : JSON.parse(localStorage.getItem('people'));
-      
-      setPeople(data);
-      isStorageEmpty && localStorage.setItem('people', JSON.stringify(data));
-    };
-
-    getData();
-  }, [])
+  const handleBelovedStatus = (id) => {
+    dispatchChangeBelovedStatus(id);
+  }
 
   const handleItemDelete = (id) => {
-    const data = [...people];
-    const filteredData = data.filter(item => item.id !== id);
-    setPeople(filteredData);
-    localStorage.setItem('people', JSON.stringify(filteredData));
+    dispatchDeletePerson(id);
+  }
+
+  const getColumns = () => {
+    if (!people.length) return [];
+
+    return Object.keys(people[0])
+      .filter(item => item !== 'id')
+      .map(columnTitle => {
+        if (columnTitle === 'beloved') {
+          return {
+            columnTitle,
+            content: ({ beloved, id }) => (
+              <input
+                type="checkbox"
+                checked={beloved}
+                onChange={() => handleBelovedStatus(id)}
+              />
+            )
+          }
+        }
+
+        if (columnTitle === 'name') {
+          return {
+            columnTitle,
+            content: (item) => (
+              <Link
+                to={{
+                  pathname: `${url}/${item.id}`,
+                  state: { ...item }
+                }}
+                style={{ color: '#ffcc00' }}
+              >
+                {item.name}
+              </Link>
+            )
+          }
+        }
+
+        return { columnTitle };
+      })
   }
 
   return (<>
@@ -38,9 +65,28 @@ export const PeoplePage = () => {
 
     <Table
       data={people}
-      columns={columns}
+      columns={getColumns()}
       tableDescriptor="People"
       onItemDelete={handleItemDelete}
     />
   </>)
 }
+
+const mapStateToProps = (state) => {
+  return {
+    people: getPeopleList(state)
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatchDeletePerson: (id) => {
+      dispatch(deletePerson(id));
+    },
+    dispatchChangeBelovedStatus: (id) => {
+      dispatch(changeBelovedStatus(id));
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PeoplePage);

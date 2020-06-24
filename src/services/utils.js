@@ -1,12 +1,12 @@
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { routes, columnsData } from './dataService';
 
 export const generateColumns = (path) => {
   return columnsData[path];
 }
 
-export const generateID = () => {
-  return uuidv4();
+export const generateID = (value) => {
+  return `${value}${nanoid()}`;
 }
 
 export const generateHeading = (path, editing) => {

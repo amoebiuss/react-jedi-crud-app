@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 const BASE_URL = 'https://swapi.dev/api';
 
 export const routes = [
@@ -32,7 +32,7 @@ export const getPeople = async () => {
   const peopleRes = await (await fetch(`${BASE_URL}/people`)).json();
 
   return peopleRes.results.map(({ name, height, mass, gender, birth_year }) => ({
-    name, height, mass, gender, birth_year, id: uuidv4()
+    name, height, mass, gender, birth_year, id: nanoid(), beloved: false
   }));
 }
 
@@ -40,7 +40,7 @@ export const getPlanets = async () => {
   const planetsRes = await (await fetch(`${BASE_URL}/planets`)).json();
 
   return planetsRes.results.map(({ name, diameter, climate, terrain, population }) => ({
-    name, diameter, climate, terrain, population, id: uuidv4()
+    name, diameter, climate, terrain, population, id: nanoid(), beloved: false
   }));
 };
 
@@ -48,6 +48,6 @@ export const getShips = async () => {
   const shipsRes = await (await fetch(`${BASE_URL}/starships`)).json();
 
   return shipsRes.results.map(({ name, model, manufacturer, crew, passengers }) => ({
-    name, model, manufacturer, crew, passengers, id: uuidv4()
+    name, model, manufacturer, crew, passengers, id: nanoid(), beloved: false
   }));
 };
