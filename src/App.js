@@ -10,6 +10,8 @@ import Navbar from './components/Navbar';
 import { PeoplePage, PlanetsPage, StarshipsPage, NotFoundPage, FormPage } from './components/pages';
 import { routes, getPeople, getPlanets, getShips } from './services/dataService';
 import { setPeople } from './store/actions/people';
+import { setPlanets } from './store/actions/planets';
+import { setStarships } from './store/actions/starships';
 import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
@@ -20,7 +22,23 @@ function App() {
             const peopleResponse = await getPeople();
             dispatch(setPeople(peopleResponse));
         }
+        fetchData();
+    }, [])
 
+    useEffect(() => {
+        async function fetchData() {
+            const planetsResponse = await getPlanets();
+            dispatch(setPlanets(planetsResponse));
+        }
+        fetchData();
+    }, [])
+
+
+    useEffect(() => {
+        async function fetchData() {
+            const starshipsResponse = await getShips();
+            dispatch(setStarships(starshipsResponse));
+        }
         fetchData();
     }, [])
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Table, Heading } from '../common';
 import { getPeopleList } from '../../store/selectors/people';
 import { deletePerson, changeBelovedStatus } from '../../store/actions/people';
-import { connect } from 'react-redux';
 
 const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson, dispatchEditPerson }) => {
   let { url } = useRouteMatch();

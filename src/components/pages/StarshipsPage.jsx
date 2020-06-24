@@ -1,32 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Table, Heading } from '../common';
-import { getShips, columnsData } from '../../services/dataService';
+import { getStarshipsList } from '../../store/selectors/starships';
+import { deleteStarship, changeBelovedStatus } from '../../store/actions/starships';
 
-export const StarshipsPage = () => {
-  const [columns] = useState(columnsData.starships);
-  const [ships, setShips] = useState([]);
+export const StarshipsPage = ({ starships, dispatchChangeBelovedStatus, dispatchDeleteStarship }) => {
   let { url } = useRouteMatch();
-
-  useEffect(() => {
-    const getData = async () => {
-      const isStorageEmpty = !localStorage.getItem('starships');
-      const data = isStorageEmpty
-        ? await getShips()
-        : JSON.parse(localStorage.getItem('starships'));
-      
-      setShips(data);
-      isStorageEmpty && localStorage.setItem('starships', JSON.stringify(data));
-    };
-
-    getData();
-  }, [])
+  
+  const handleBelovedStatus = (id) => {
+    dispatchChangeBelovedStatus(id);
+  }
 
   const handleItemDelete = (id) => {
-    const data = [...ships];
-    const filteredData = data.filter(item => item.id !== id);
-    setShips(filteredData);
-    localStorage.setItem('starships', JSON.stringify(filteredData));
+    dispatchDeleteStarship(id);
+  }
+
+  const getColumns = () => {
+    if (!starships.length) return [];
+
+    return Object.keys(starships[0])
+      .filter(item => item !== 'id')
+      .map(columnTitle => {
+        if (columnTitle === 'beloved') {
+          return {
+            columnTitle,
+            content: ({ beloved, id }) => (
+              <input
+                type="checkbox"
+                checked={beloved}
+                onChange={() => handleBelovedStatus(id)}
+              />
+            )
+          }
+        }
+
+        if (columnTitle === 'name') {
+          return {
+            columnTitle,
+            content: (item) => (
+              <Link
+                to={{
+                  pathname: `${url}/${item.id}`,
+                  state: { ...item }
+                }}
+                style={{ color: '#ffcc00' }}
+              >
+                {item.name}
+              </Link>
+            )
+          }
+        }
+
+        return { columnTitle };
+      })
   }
 
   return (<>
@@ -37,10 +64,30 @@ export const StarshipsPage = () => {
     </Link>
 
     <Table
-      data={ships}
-      columns={columns}
+      data={starships}
+      columns={getColumns()}
       tableDescriptor="Starships"
       onItemDelete={handleItemDelete}
     />
   </>)
 };
+
+
+const mapStateToProps = (state) => {
+  return {
+    starships: getStarshipsList(state)
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatchDeleteStarship: (id) => {
+      dispatch(deleteStarship(id));
+    },
+    dispatchChangeBelovedStatus: (id) => {
+      dispatch(changeBelovedStatus(id));
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StarshipsPage);
