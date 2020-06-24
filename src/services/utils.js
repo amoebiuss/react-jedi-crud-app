@@ -11,7 +11,7 @@ export const generateID = (value) => {
 
 export const generateHeading = (path, editing) => {
   const firstPart = editing ? 'Edit' : 'Add new';
-  const route = routes.find(route => path.includes(route.path));
+  const route = routes.find(route => route.path.includes(path));
 
   return `${firstPart} ${route.titleSlug}`;
 }

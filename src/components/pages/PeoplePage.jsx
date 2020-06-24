@@ -5,7 +5,7 @@ import { Table, Heading } from '../common';
 import { getPeopleList } from '../../store/selectors/people';
 import { deletePerson, changeBelovedStatus } from '../../store/actions/people';
 
-const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson, dispatchEditPerson }) => {
+const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson }) => {
   let { url } = useRouteMatch();
 
   const handleBelovedStatus = (id) => {
