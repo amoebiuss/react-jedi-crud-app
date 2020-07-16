@@ -1,3 +1,1 @@
-export const getStarshipsList = (state) => {
-  return state.starships.starshipsList;
-}
+export const getStarshipsList = (state) => state.starships.starshipsList

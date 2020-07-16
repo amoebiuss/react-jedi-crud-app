@@ -7,7 +7,7 @@ const BackLink = () => {
   return (
     <Button
       label="< back"
-      classes="alert alert-link"
+      className="alert alert-link"
       onClick={() => history.goBack()}
     />
   );
