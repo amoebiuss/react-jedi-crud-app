@@ -8,14 +8,6 @@ import { deletePerson, changeBelovedStatus } from '../../store/actions/people';
 const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson }) => {
   let { url } = useRouteMatch();
 
-  const handleBelovedStatus = (id) => {
-    dispatchChangeBelovedStatus(id);
-  }
-
-  const handleItemDelete = (id) => {
-    dispatchDeletePerson(id);
-  }
-
   const getColumns = () => {
     if (!people.length) return [];
 
@@ -29,7 +21,7 @@ const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson 
               <input
                 type="checkbox"
                 checked={beloved}
-                onChange={() => handleBelovedStatus(id)}
+                onChange={() => dispatchChangeBelovedStatus(id)}
               />
             )
           }
@@ -67,26 +59,17 @@ const PeoplePage = ({ people, dispatchChangeBelovedStatus, dispatchDeletePerson 
       data={people}
       columns={getColumns()}
       tableDescriptor="People"
-      onItemDelete={handleItemDelete}
+      onItemDelete={dispatchDeletePerson}
     />
   </>)
 }
 
-const mapStateToProps = (state) => {
-  return {
+export default connect(
+  (state) => ({
     people: getPeopleList(state)
-  };
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatchDeletePerson: (id) => {
-      dispatch(deletePerson(id));
-    },
-    dispatchChangeBelovedStatus: (id) => {
-      dispatch(changeBelovedStatus(id));
-    },
+  }),
+  {
+    dispatchDeletePerson: deletePerson,
+    dispatchChangeBelovedStatus: changeBelovedStatus,
   }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PeoplePage);
+)(PeoplePage);

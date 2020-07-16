@@ -1,56 +1,56 @@
-import React from 'react';
-import Button from './Button';
-import { Alert } from 'react-bootstrap';
-import { generateID } from '../../services/utils';
+import React from 'react'
+import Button from './Button'
+import { Alert } from 'react-bootstrap'
 
-import './Table.css';
+import './Table.css'
 
-function Table({ columns, data, tableDescriptor, onItemDelete,}) {
-    const renderCell = (item, column) => {
-        if (column.content) return column?.content(item);
-
-        return column?.columnTitle !== 'id'
-            ? item[column.columnTitle]
-            : null;
+const Table = ({ columns, data, tableDescriptor, onItemDelete }) => {
+  const renderCell = (item, column) => {
+    if (column.content) { // better use full body
+      return column?.content(item)
     }
 
-    if (!data?.length) {
-        return <Alert variant="info">No data, but you can add some.</Alert>
-    }
+    return column?.columnTitle !== 'id'
+      ? item[column.columnTitle]
+      : null
+  }
 
-    return (
-        <table className="table table-striped table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">{tableDescriptor}</th>
-                    {columns.map(column => (
-                        <th key={generateID(column.columnTitle)} scope="col">{column.columnTitle}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((item, index) => (
-                    <tr key={generateID(item.name)}>
-                        <th scope="row">{++index}</th>
-                        {columns.map(column => {
-                            return (
-                                <td key={generateID(item.name)}>
-                                    {renderCell(item, column)}
-                                </td>
-                            )
-                        })}
-                        <td>
-                            <Button
-                                onClick={() => onItemDelete(item.id)}
-                                classes="btn btn-danger"
-                                label="Delete"
-                            />
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    )
+  if (!data?.length) {
+    return <Alert variant="info">No data, but you can add some.</Alert>
+  }
+  return (
+    <table className="table table-striped table-dark">
+      <thead>
+      <tr>
+        <th scope="col">{tableDescriptor}</th>
+        {columns.map(column => (
+          <th key={column.columnTitle} scope="col">{column.columnTitle}</th>
+        ))}
+      </tr>
+      </thead>
+      <tbody>
+      {data.map((item, index) => (
+        <tr key={item.name}>
+          <th scope="row">{index + 1}</th>
+          {
+            columns.map(column => (
+              <td key={column.columnTitle}>
+                {renderCell(item, column)}
+              </td>
+            ))
+          }
+          <td>
+            <Button
+              onClick={() => onItemDelete(item.id)}
+              className="btn btn-danger"
+              label="Delete"
+            />
+          </td>
+        </tr>
+      ))}
+      </tbody>
+    </table>
+  )
 }
 
-export default Table;
+export default Table

@@ -7,12 +7,13 @@ const Input = ({name, label, error, ...rest}) => {
             <input
                 id={name}
                 name={name}
-                {...rest}
                 className="form-control"
+                {...rest}
             />
             {error && <div className="alert alert-danger">{error}</div>}
         </div>
     );
 };
+// {...rest} in end of props for allow to override className
 
 export default Input;

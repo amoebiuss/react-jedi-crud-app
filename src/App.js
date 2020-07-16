@@ -8,7 +8,7 @@ import {
 import { useDispatch } from 'react-redux';
 import Navbar from './components/Navbar';
 import { PeoplePage, PlanetsPage, StarshipsPage, NotFoundPage, FormPage } from './components/pages';
-import { routes, getPeople, getPlanets, getShips } from './services/dataService';
+import { loadPeople, loadPlanets, loadShips } from './services/dataService';
 import { setPeople } from './store/actions/people';
 import { setPlanets } from './store/actions/planets';
 import { setStarships } from './store/actions/starships';
@@ -19,7 +19,7 @@ function App() {
 
     useEffect(() => {
         async function fetchData() {
-            const peopleResponse = await getPeople();
+            const peopleResponse = await loadPeople();
             dispatch(setPeople(peopleResponse));
         }
         fetchData();
@@ -27,7 +27,7 @@ function App() {
 
     useEffect(() => {
         async function fetchData() {
-            const planetsResponse = await getPlanets();
+            const planetsResponse = await loadPlanets();
             dispatch(setPlanets(planetsResponse));
         }
         fetchData();
@@ -36,7 +36,7 @@ function App() {
 
     useEffect(() => {
         async function fetchData() {
-            const starshipsResponse = await getShips();
+            const starshipsResponse = await loadShips();
             dispatch(setStarships(starshipsResponse));
         }
         fetchData();
@@ -44,7 +44,7 @@ function App() {
 
     return (
         <Router>
-            <Navbar routes={routes} />
+            <Navbar /> {/* import constant in Navbar instead past via props */}
             <main className="container">
                 <Switch>
                     <Redirect exact from="/" to="/people" />

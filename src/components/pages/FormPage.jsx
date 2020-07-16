@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Heading, BackLink } from '../common';
-import { generateColumns, generateID, generateHeading } from '../../services/utils';
+import { generateColumns, generateID, getNameBySlag } from '../../services/utils';
 import { setPeople } from '../../store/actions/people';
 import { setPlanets } from '../../store/actions/planets';
 import { setStarships } from '../../store/actions/starships';
@@ -13,30 +13,26 @@ import { getStarshipsList } from '../../store/selectors/starships';
 const FormPage = ({ items, slug, currentItem, dispatchListUpdate }) => {
   const history = useHistory();
 
-  const handleListUpdate = (items) => {
-    dispatchListUpdate(items);
-  }
-
-  const handleFormSubmit = (personData) => {
-    const index = items.findIndex((item) => item.id === personData.id);
-    const updatedPerson = { ...personData, id: generateID() };
+  const handleFormSubmit = (updateData) => {
+    const index = items.findIndex((item) => item.id === updateData.id);
+    const updatedPerson = { id: generateID(), ...updateData }; // now we don't change id on change item
     let newList = [...items];
 
+    console.log(items, newList)
     if (index === -1) {
       newList = [...newList, updatedPerson];
     } else {
       newList[index] = updatedPerson;
     }
 
-    handleListUpdate(newList);
+    dispatchListUpdate(newList);
     history.goBack();
   }
-
   return (<>
     {
       currentItem && Object.keys(currentItem).length
-        ? <Heading text={`${generateHeading(slug, true)}: ${currentItem.name}`} />
-        : <Heading text={generateHeading(slug, false)} />
+        ? <Heading text={`Edit ${getNameBySlag(slug)}: ${currentItem.name}`} />
+        : <Heading text={`Add new ${getNameBySlag(slug)}`} />
     }
 
     <BackLink />
@@ -48,43 +44,46 @@ const FormPage = ({ items, slug, currentItem, dispatchListUpdate }) => {
   </>);
 }
 
+// TODO: move to utils
+const getSlug = (path) => {
+  return path.slice(path.indexOf('/') + 1, path.lastIndexOf('/'))
+}
+
+// TODO: move to selectors
+const getItemsBySlag = (state, slug) =>  {
+  if (slug === 'people') { //  nice to extract to separate selector
+    return getPeopleList(state)
+  } else if (slug === 'planets') {
+    return getPlanetsList(state)
+  } else if (slug === 'starships') {
+    return getStarshipsList(state)
+  }
+  return []
+}
+
 const mapStateToProps = (state, ownProps) => {
   const path = ownProps.match.path;
   const currentItem = {...ownProps.location.state};
-  const slug = path.slice(path.indexOf('/') + 1, path.lastIndexOf('/'));
-  const props = { slug, currentItem };
+  const slug = getSlug(path);
+  return {
+    slug,
+    currentItem,
+    items: getItemsBySlag(state, slug)
+  };
+}
 
-  if (slug === 'people') {
-    props.items = getPeopleList(state);
-  } else if (slug === 'planets') {
-    props.items = getPlanetsList(state);
-  } else if (slug === 'starships') {
-    props.items = getStarshipsList(state);
-  }
-
-  return props;
+const ACTION_BY_SLAG = {
+  people: setPeople,
+  planets: setPlanets,
+  starships: setStarships,
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const path = ownProps.match.path;
-  const slug = path.slice(path.indexOf('/') + 1, path.lastIndexOf('/'));
-  const actions = {};
-
-  if (slug === 'people') {
-    actions.dispatchListUpdate = (list) => {
-      dispatch(setPeople(list));
-    };
-  } else if (slug === 'planets') {
-    actions.dispatchListUpdate = (list) => {
-      dispatch(setPlanets(list));
-    };
-  } else if (slug === 'starships') {
-    actions.dispatchListUpdate = (list) => {
-      dispatch(setStarships(list));
-    };
-  }
-
-  return actions;
+  const slug = getSlug(path);
+  return {
+    dispatchListUpdate: list => dispatch(ACTION_BY_SLAG[slug](list))
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormPage);

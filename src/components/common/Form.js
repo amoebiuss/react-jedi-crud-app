@@ -1,70 +1,71 @@
-import React, { useState } from 'react';
-import Input from "./Input";
-import Button from "./Button";
+import React, { useState } from 'react'
+import Input from "./Input"
+import Button from "./Button"
 
 const Form = ({ columns, initialData, onFormSubmit }) => {
-    const [personData, setPersonData] = useState(initialData);
-    const [formErrors, setFormErrors] = useState({});
+  const [formData, setFormData] = useState(initialData) // why person? this form work only with person?
+  const [formErrors, setFormErrors] = useState({})
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const errors = validate(personData);
+  const handleSubmit = (event) => {
+    event.preventDefault()
 
-        if (Object.keys(errors).length) {
-            return;
-        }
-
-        onFormSubmit(personData);
+    if (!validate(formData)) {
+      return
     }
 
-    const handleChange = (event) => {
-        const { currentTarget: input } = event;
-        const data = { ...personData };
-        const errors = { ...formErrors };
+    onFormSubmit(formData)
+  }
 
-        if (errors[input.name]) {
-            delete errors[input.name];
-        }
+  const handleChange = (event) => { // rerender each change
+    const { currentTarget: input } = event
+    const data = { ...formData }
+    const errors = { ...formErrors }
 
-        data[input.name] = input.value;
-        setPersonData(data);
-        setFormErrors(errors);
+    if (errors[input.name]) {
+      delete errors[input.name]
     }
 
-    const validate = (data) => {
-        let errors = {};
+    data[input.name] = input.value
+    setFormData(data)
+    setFormErrors(errors)
+  }
 
-        columns.forEach((key) => {
-            if (!data[key]) {
-                errors = { ...errors, [key]: 'Field is required' };
-            }
-        })
+  const validate = (data) => {
+    let errors = {}
+    let valid = true
 
-        setFormErrors(errors);
-        return errors;
-    }
+    columns.forEach((key) => {
+      if (!data[key]) {
+        errors = { ...errors, [key]: 'Field is required' }
+        valid = false
+      }
+    })
 
-    return (
-        <form>
-            {columns.map(columnName => (
-                <Input
-                    key={columnName}
-                    name={columnName}
-                    label={columnName}
-                    value={personData[columnName] || ''}
-                    type="input"
-                    error={formErrors[columnName]}
-                    onChange={handleChange}
-                />
-            ))}
+    setFormErrors(errors)
+    return valid
+  }
 
-            <Button
-                label="Save"
-                classes="alert alert-success"
-                onClick={handleSubmit}
-            />
-        </form>
-    );
-};
+  return (
+    <form>
+      {columns.map(columnName => (
+        <Input
+          key={columnName}
+          name={columnName}
+          label={columnName}
+          value={formData[columnName] || ''}
+          type="input"
+          error={formErrors[columnName]}
+          onChange={handleChange}
+        />
+      ))}
 
-export default Form;
+      <Button
+        label="Save"
+        className="alert alert-success"
+        onClick={handleSubmit}
+      />
+    </form>
+  )
+}
+
+export default Form

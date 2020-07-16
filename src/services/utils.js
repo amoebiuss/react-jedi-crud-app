@@ -1,17 +1,15 @@
 import { nanoid } from 'nanoid';
-import { routes, columnsData } from './dataService';
+import { ROUTES, COLUMNS_DATA } from './constants';
 
 export const generateColumns = (path) => {
-  return columnsData[path];
+  return COLUMNS_DATA[path];
 }
 
-export const generateID = (value) => {
+export const generateID = (value) => { // always new key
   return `${value}${nanoid()}`;
 }
 
-export const generateHeading = (path, editing) => {
-  const firstPart = editing ? 'Edit' : 'Add new';
-  const route = routes.find(route => route.path.includes(path));
-
-  return `${firstPart} ${route.titleSlug}`;
+export const getNameBySlag = path => {
+  const route = ROUTES.find(route => route.path.includes(path));
+  return route.titleSlug;
 }

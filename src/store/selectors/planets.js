@@ -1,3 +1,1 @@
-export const getPlanetsList = (state) => {
-  return state.planets.planetsList;
-}
+export const getPlanetsList = (state) => state.planets.planetsList
