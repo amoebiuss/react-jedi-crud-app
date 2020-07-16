@@ -9,7 +9,7 @@ export const DELETE_PLANET = 'DELETE_PLANET';
 export const CHANGE_BELOVED_STATUS = 'CHANGE_BELOVED_STATUS';
 
 export function setPlanets(planets) {
-  return { type: SET_PLANETS, payload: { planets } };
+  return { type: SET_PLANETS, planets };
 }
 
 export function deletePlanet(id) {

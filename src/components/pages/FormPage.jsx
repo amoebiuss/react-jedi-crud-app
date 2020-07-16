@@ -1,8 +1,9 @@
+import { nanoid } from 'nanoid'
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Heading, BackLink } from '../common';
-import { generateColumns, generateID, getNameBySlag } from '../../services/utils';
+import { generateColumns, getNameBySlag } from '../../services/utils';
 import { setPeople } from '../../store/actions/people';
 import { setPlanets } from '../../store/actions/planets';
 import { setStarships } from '../../store/actions/starships';
@@ -15,10 +16,9 @@ const FormPage = ({ items, slug, currentItem, dispatchListUpdate }) => {
 
   const handleFormSubmit = (updateData) => {
     const index = items.findIndex((item) => item.id === updateData.id);
-    const updatedPerson = { id: generateID(), ...updateData }; // now we don't change id on change item
+    const updatedPerson = { id: nanoid(), ...updateData }; // now we don't change id on change item
     let newList = [...items];
 
-    console.log(items, newList)
     if (index === -1) {
       newList = [...newList, updatedPerson];
     } else {
@@ -28,13 +28,13 @@ const FormPage = ({ items, slug, currentItem, dispatchListUpdate }) => {
     dispatchListUpdate(newList);
     history.goBack();
   }
-  return (<>
-    {
-      currentItem && Object.keys(currentItem).length
-        ? <Heading text={`Edit ${getNameBySlag(slug)}: ${currentItem.name}`} />
-        : <Heading text={`Add new ${getNameBySlag(slug)}`} />
-    }
 
+  const headingText = currentItem && Object.keys(currentItem).length
+    ? `Edit ${getNameBySlag(slug)}: ${currentItem.name}`
+    : `Add new ${getNameBySlag(slug)}`
+
+  return (<>
+    <Heading text={headingText} />
     <BackLink />
     <Form
       initialData={currentItem}

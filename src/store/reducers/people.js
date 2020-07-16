@@ -14,7 +14,7 @@ function people(state = initialState, action) {
     case DELETE_PERSON:
       return {
         ...state,
-        peopleList: state.peopleList.filter(person => person.id !== action.payload.id), // action data should be in payload
+        peopleList: state.peopleList.filter(person => person.id !== action.payload.id),
       };
     case CHANGE_BELOVED_STATUS: // better name toggle
       return {
